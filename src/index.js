@@ -6,6 +6,7 @@ import { AudioPlayerStatus } from "@discordjs/voice";
 import handleSearch from "./utils/search.js";
 import disconnect from "./utils/disconnect.js";
 import handleQueue from "./commandHandlers/queue.js";
+import handleSkip from "./commandHandlers/skip.js";
 
 
 dotenv.config({path: "./src/.env"});
@@ -18,7 +19,7 @@ const client = new Client({ intents: [
 
 const prefix = "-";
 
-let audioState = null;
+let audioState = {};
 let songQueue = [];
 
 client.on("messageCreate", async (msg) => {
@@ -27,7 +28,7 @@ client.on("messageCreate", async (msg) => {
         const [command, args] = msg.content.indexOf(" ")===-1 ? [msg.content,""] : [msg.content.substring(0,msg.content.indexOf(" ")), msg.content.substring(msg.content.indexOf(" ")+1).trim()];
     
         if(command===`${prefix}play`){
-            if(audioState===null){
+            if(!audioState.connection){
                 audioState = handleJoin(msg);
                 
                 if(!audioState) return;
@@ -68,22 +69,11 @@ client.on("messageCreate", async (msg) => {
         }
         else if(command===`${prefix}queue` || command===`${prefix}q`){
 
-            // const queueMessageContent = new MessageEmbed();
-            
-            // let descriptionStr = "";
-            
-            // songQueue.forEach((elem,idx) => {
-            //     descriptionStr+=`**${idx+1}.** ${elem.title}\n`;
-            // });
-            
-            // queueMessageContent.setTitle("Queue").setColor("WHITE").setDescription(descriptionStr);
-
-            // msg?.channel?.send({embeds: [queueMessageContent]});
-            
             handleQueue(msg,songQueue);
         }
         else if(command===`${prefix}skip` || command===`${prefix}next` || command===`${prefix}n`){
             
+            handleSkip(audioState,songQueue,msg);
         }
         else if(command===`${prefix}disconnect`){
 

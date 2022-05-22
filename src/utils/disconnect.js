@@ -4,7 +4,7 @@ import AudioState from "../models/AudioState.js";
 import Song from "../models/Song.js"
 /**
  * 
- * @param {AudioState | null} audioState 
+ * @param {AudioState} audioState 
  * @param {Array<Song>} songQueue
  * @param {Message} msg 
  */
@@ -12,8 +12,12 @@ import Song from "../models/Song.js"
 const disconnect = (audioState,songQueue, msg) => {
     audioState.player.stop();
     audioState.connection.destroy();
-    audioState = null;
-    songQueue = [];
+    delete audioState.connection;
+    delete audioState.player;
+    
+    const queueSize = songQueue.length;
+
+    for(let i=0;i<queueSize;i++) songQueue.shift();
 
     const disconnectMessageContent = new MessageEmbed();
     disconnectMessageContent.setTitle("Disconnected").setColor("WHITE");

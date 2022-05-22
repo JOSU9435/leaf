@@ -4,9 +4,10 @@ import ytdl from "ytdl-core";
 import yts from "yt-search";
 import disconnect from "./disconnect.js";
 import AudioState from "../models/AudioState.js";
+import Song from "../models/Song.js";
 
 /**
- * @param {Array} songQueue
+ * @param {Array<Song>} songQueue
  * @param {AudioState} audioState 
  * @param {Message} msg
  */
