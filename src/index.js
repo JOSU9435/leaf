@@ -7,6 +7,8 @@ import handleSearch from "./utils/search.js";
 import disconnect from "./utils/disconnect.js";
 import handleQueue from "./commandHandlers/queue.js";
 import handleSkip from "./commandHandlers/skip.js";
+import handlePause from "./commandHandlers/pause.js";
+import handleResume from "./commandHandlers/resume.js";
 
 
 dotenv.config({path: "./src/.env"});
@@ -31,7 +33,7 @@ client.on("messageCreate", async (msg) => {
             if(!audioState.connection){
                 audioState = handleJoin(msg);
                 
-                if(!audioState) return;
+                if(!audioState.connection) return;
             }
     
             const song = await handleSearch(args);
@@ -75,7 +77,13 @@ client.on("messageCreate", async (msg) => {
             
             handleSkip(audioState,songQueue,msg);
         }
-        else if(command===`${prefix}disconnect`){
+        else if(command===`${prefix}pause`){
+            handlePause(audioState,msg);
+        }
+        else if(command===`${prefix}resume` || command===`${prefix}unpause`){
+            handleResume(audioState,msg);
+        }
+        else if(command===`${prefix}disconnect` || command===`${prefix}dc`){
 
             disconnect(audioState,songQueue,msg);
         }
