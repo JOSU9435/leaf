@@ -1,7 +1,7 @@
 import Discord from "discord.js";
-import { joinVoiceChannel } from "@discordjs/voice";
+import { createAudioPlayer, joinVoiceChannel } from "@discordjs/voice";
 
-const join = (msg) => {
+const handleJoin = (msg) => {
 
     const memberVoiceChannel = msg?.member?.voice?.channel;
     if(!memberVoiceChannel){
@@ -15,9 +15,16 @@ const join = (msg) => {
         adapterCreator: memberVoiceChannel.guild.voiceAdapterCreator,
     })
 
+    const player = createAudioPlayer();
+
+    connection.subscribe(player);
+
     msg?.channel?.send("leaf joined");
 
-    return connection;
+    return {
+        connection,
+        player,
+    };
 }
 
-export default join;
+export default handleJoin;
