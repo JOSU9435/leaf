@@ -1,10 +1,13 @@
+import { MessageEmbed } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
 import Song from "../models/Song.js";
+import disconnect from "./disconnect.js";
 
 /**
  * 
  * @param {string} args 
+ * @returns {Song} 
  */
 const handleSearch = async (args) => {
     try {
@@ -18,7 +21,7 @@ const handleSearch = async (args) => {
         }
 
         if(!ytdl.validateURL(url)){
-            throw new Error("song not found");
+            return null;
         }
         
         const video = await yts({videoId: url.substring(url.indexOf("?v=")+3)});

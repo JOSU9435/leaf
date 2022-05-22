@@ -1,11 +1,21 @@
-import Discord from "discord.js";
-import { createAudioPlayer, joinVoiceChannel } from "@discordjs/voice";
+import Discord, { Message, MessageEmbed } from "discord.js";
+import { AudioPlayer, createAudioPlayer, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
+import AudioState from "../models/AudioState.js";
+
+/**
+ * 
+ * @param {Message} msg 
+ * @returns {AudioState}
+ */
 
 const handleJoin = (msg) => {
 
     const memberVoiceChannel = msg?.member?.voice?.channel;
     if(!memberVoiceChannel){
-        msg.reply("need to be in a voice channel first");
+        const enterVcMessage = new MessageEmbed();
+        enterVcMessage.setTitle("You need to be in a VC first").setColor("WHITE");
+
+        msg.reply({embeds: [enterVcMessage]});
         return null;
     }
 
@@ -19,12 +29,9 @@ const handleJoin = (msg) => {
 
     connection.subscribe(player);
 
-    msg?.channel?.send("leaf joined");
+    const audioState = new AudioState(connection,player)
 
-    return {
-        connection,
-        player,
-    };
+    return audioState;
 }
 
 export default handleJoin;
