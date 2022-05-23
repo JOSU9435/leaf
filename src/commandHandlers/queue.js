@@ -8,7 +8,7 @@ import Song from "../models/Song.js";
  */
 const handleQueue = (msg,songQueue) => {
     const queueMessageContent = new MessageEmbed();
-            
+    
     let descriptionStr = "";
     
     songQueue.forEach((elem,idx) => {

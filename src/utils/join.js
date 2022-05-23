@@ -1,6 +1,7 @@
 import Discord, { Message, MessageEmbed } from "discord.js";
-import { AudioPlayer, createAudioPlayer, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
+import { AudioPlayer, createAudioPlayer, joinVoiceChannel, VoiceConnection, VoiceConnectionStatus } from "@discordjs/voice";
 import AudioState from "../models/AudioState.js";
+import disconnect from "../commandHandlers/disconnect.js";
 
 /**
  * 
@@ -16,8 +17,10 @@ const handleJoin = (msg) => {
         enterVcMessage.setTitle("You need to be in a VC first").setColor("WHITE");
 
         msg.reply({embeds: [enterVcMessage]});
-        return null;
+        return {};
     }
+
+    const songQueue = [];
 
     const connection = joinVoiceChannel({
         channelId: memberVoiceChannel.id,
@@ -29,7 +32,11 @@ const handleJoin = (msg) => {
 
     connection.subscribe(player);
 
-    const audioState = new AudioState(connection,player)
+    connection.on(VoiceConnectionStatus.Disconnected,() => {
+        disconnect(audioState,msg);
+    })
+
+    const audioState = new AudioState(connection,player,songQueue);
 
     return audioState;
 }

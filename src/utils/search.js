@@ -2,7 +2,7 @@ import { MessageEmbed } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
 import Song from "../models/Song.js";
-import disconnect from "./disconnect.js";
+import disconnect from "../commandHandlers/disconnect.js";
 
 /**
  * 

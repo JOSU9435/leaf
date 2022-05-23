@@ -9,11 +9,14 @@ import Song from "../models/Song.js"
  * @param {Message} msg 
  */
 
-const disconnect = (audioState,songQueue, msg) => {
-    audioState.player.stop();
-    audioState.connection.destroy();
-    delete audioState.connection;
-    delete audioState.player;
+const disconnect = (audioState, msg) => {
+
+    const {connection, player, songQueue} = audioState;
+
+    player?.stop();
+    connection?.destroy();
+    delete audioState?.connection;
+    delete audioState?.player;
     
     const queueSize = songQueue.length;
 

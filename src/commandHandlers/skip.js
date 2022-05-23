@@ -5,10 +5,11 @@ import handlePlay from "../utils/play.js";
 
 /**
  * @param {AudioState} audioState
- * @param {Array<Song>} songQueue 
  * @param {Message} msg 
  */
-const handleSkip = (audioState,songQueue,msg) => {
+const handleSkip = (audioState,msg) => {
+
+    const {player, songQueue} = audioState;
 
     if(songQueue.length===0) return;
 
@@ -18,9 +19,9 @@ const handleSkip = (audioState,songQueue,msg) => {
     songQueue.shift();
     if(songQueue.length!==0){
 
-        handlePlay(songQueue,audioState,msg);
+        handlePlay(audioState,msg);
     }else{
-        audioState.player.stop();
+        player?.stop();
         const queueEndMessage = new MessageEmbed();
 
         queueEndMessage.setTitle("End of queue").setColor("WHITE");

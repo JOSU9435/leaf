@@ -4,7 +4,7 @@ import handleJoin from "./utils/join.js";
 import handlePlay from "./utils/play.js";
 import { AudioPlayerStatus } from "@discordjs/voice";
 import handleSearch from "./utils/search.js";
-import disconnect from "./utils/disconnect.js";
+import disconnect from "./commandHandlers/disconnect.js";
 import handleQueue from "./commandHandlers/queue.js";
 import handleSkip from "./commandHandlers/skip.js";
 import handlePause from "./commandHandlers/pause.js";
@@ -22,21 +22,22 @@ const client = new Client({ intents: [
 const prefix = "-";
 
 let audioState = {};
-let songQueue = [];
 
 client.on("messageCreate", async (msg) => {
 
     try {
         const [command, args] = msg.content.indexOf(" ")===-1 ? [msg.content,""] : [msg.content.substring(0,msg.content.indexOf(" ")), msg.content.substring(msg.content.indexOf(" ")+1).trim()];
     
-        if(command===`${prefix}play`){
-            if(!audioState.connection){
+        if(command===`${prefix}play` || command===`${prefix}p`){
+            if(!audioState?.connection){
                 audioState = handleJoin(msg);
                 
-                if(!audioState.connection) return;
+                if(!audioState?.connection) return;
             }
     
             const song = await handleSearch(args);
+
+            const {songQueue} = audioState;
 
             if(!song){
                 const songNotfoundMessage = new MessageEmbed();
@@ -55,12 +56,12 @@ client.on("messageCreate", async (msg) => {
             msg?.channel?.send({embeds: [queueMessageContent]});
                         
             if(audioState?.player?.state?.status===AudioPlayerStatus.Idle && songQueue.length!==0){
-                handlePlay(songQueue,audioState,msg);
+                handlePlay(audioState,msg);
 
                 const handlePlayerIdle = () => {
                     songQueue.shift();
                     if(songQueue.length!==0){
-                        handlePlay(songQueue,audioState,msg);
+                        handlePlay(audioState,msg);
                     }else{
                         audioState.player.off(AudioPlayerStatus.Idle,handlePlayerIdle);
                     }
@@ -71,11 +72,11 @@ client.on("messageCreate", async (msg) => {
         }
         else if(command===`${prefix}queue` || command===`${prefix}q`){
 
-            handleQueue(msg,songQueue);
+            handleQueue(msg,audioState?.songQueue);
         }
         else if(command===`${prefix}skip` || command===`${prefix}next` || command===`${prefix}n`){
             
-            handleSkip(audioState,songQueue,msg);
+            handleSkip(audioState,msg);
         }
         else if(command===`${prefix}pause`){
             handlePause(audioState,msg);
@@ -85,7 +86,7 @@ client.on("messageCreate", async (msg) => {
         }
         else if(command===`${prefix}disconnect` || command===`${prefix}dc`){
 
-            disconnect(audioState,songQueue,msg);
+            disconnect(audioState,msg);
         }
         
     } catch (error) {

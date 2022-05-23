@@ -2,23 +2,22 @@ import Discord, { Message, MessageEmbed } from "discord.js";
 import { AudioPlayerStatus, createAudioPlayer, createAudioResource } from "@discordjs/voice";
 import ytdl from "ytdl-core";
 import yts from "yt-search";
-import disconnect from "./disconnect.js";
+import disconnect from "../commandHandlers/disconnect.js";
 import AudioState from "../models/AudioState.js";
 import Song from "../models/Song.js";
 
 /**
- * @param {Array<Song>} songQueue
  * @param {AudioState} audioState 
  * @param {Message} msg
  */
 
-const handlePlay = async (songQueue, audioState, msg) => {
+const handlePlay = async (audioState, msg) => {
     
     try {
+        const {player, songQueue} = audioState;
 
         if(songQueue.length===0) return;
 
-        const {player} = audioState;
         
         const song =  songQueue[0];
 
@@ -46,7 +45,7 @@ const handlePlay = async (songQueue, audioState, msg) => {
 
     } catch (error) {
         
-        disconnect(audioState,songQueue,msg);
+        disconnect(audioState,msg);
 
         const errMessageContent = new MessageEmbed();
         errMessageContent.setTitle("Something went wrong").setColor("WHITE");
