@@ -2,13 +2,14 @@ import dotenv from "dotenv";
 import { Client, Intents, MessageEmbed } from "discord.js";
 import handleJoin from "./utils/join.js";
 import handlePlay from "./utils/play.js";
-import { AudioPlayerStatus } from "@discordjs/voice";
+import { AudioPlayerStatus, VoiceConnectionStatus } from "@discordjs/voice";
 import handleSearch from "./utils/search.js";
 import disconnect from "./commandHandlers/disconnect.js";
 import handleQueue from "./commandHandlers/queue.js";
 import handleSkip from "./commandHandlers/skip.js";
 import handlePause from "./commandHandlers/pause.js";
 import handleResume from "./commandHandlers/resume.js";
+import handleHelp from "./commandHandlers/help.js";
 
 
 dotenv.config({path: "./src/.env"});
@@ -21,11 +22,15 @@ const client = new Client({ intents: [
 
 const prefix = "-";
 
-let audioState = {};
+const audioStateMap = new Map();
 
 client.on("messageCreate", async (msg) => {
 
     try {
+
+        let audioState = audioStateMap.get(msg.guildId);
+        console.log(audioState);
+
         const [command, args] = msg.content.indexOf(" ")===-1 ? [msg.content,""] : [msg.content.substring(0,msg.content.indexOf(" ")), msg.content.substring(msg.content.indexOf(" ")+1).trim()];
     
         if(command===`${prefix}play` || command===`${prefix}p`){
@@ -70,6 +75,12 @@ client.on("messageCreate", async (msg) => {
                 audioState.player.on(AudioPlayerStatus.Idle, handlePlayerIdle);
             }
         }
+        else if(command===`${prefix}help` || command===`${prefix}h`){
+            handleHelp(msg);
+        }
+        else if(audioState?.connection?.state?.status !== VoiceConnectionStatus.Ready){
+            return;
+        }
         else if(command===`${prefix}queue` || command===`${prefix}q`){
 
             handleQueue(msg,audioState?.songQueue);
@@ -89,13 +100,21 @@ client.on("messageCreate", async (msg) => {
             disconnect(audioState,msg);
         }
         
+        audioStateMap.set(msg.guildId,audioState);
+
     } catch (error) {
         console.log(error.message);
     }
 
 })
 
-client.on('ready', () => {
+client.on('ready', async () => {
+    const guilds = await client.guilds.fetch();
+
+    guilds.forEach((val,key) => {
+        audioStateMap.set(key,{});
+    })
+
     console.log(`Logged in as ${client.user.tag}!`);
 });
 client.login(process.env.BOT_TOKEN);

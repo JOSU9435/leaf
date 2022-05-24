@@ -7,11 +7,12 @@ import disconnect from "../commandHandlers/disconnect.js";
 /**
  * 
  * @param {string} args 
- * @returns {Song} 
+ * @returns {Song | null} 
  */
 const handleSearch = async (args) => {
     try {
         let url;
+        if(!args) return null;
     
         if(ytdl.validateURL(args)){
             url = args;
