@@ -29,7 +29,6 @@ client.on("messageCreate", async (msg) => {
     try {
 
         let audioState = audioStateMap.get(msg.guildId);
-        console.log(audioState);
 
         const [command, args] = msg.content.indexOf(" ")===-1 ? [msg.content,""] : [msg.content.substring(0,msg.content.indexOf(" ")), msg.content.substring(msg.content.indexOf(" ")+1).trim()];
     
