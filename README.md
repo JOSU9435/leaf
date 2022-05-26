@@ -1,8 +1,8 @@
-#leaf
+# leaf
 
 leaf is a discord bot that plays audio/music in voice Channels from youTube and can pause,resume,queue audio/music.
 
-#Commands
+# Commands
 
 - **-play, -p :** plays any song using a url or youTube search. 
 
