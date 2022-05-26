@@ -9,14 +9,15 @@ import handlePlay from "../utils/play.js";
  */
 const handleSkip = (audioState,msg) => {
 
-    const {player, songQueue} = audioState;
+    const {player, songQueue, isLooping} = audioState;
 
     if(songQueue.length===0) return;
 
     const skipMessage = new MessageEmbed();
     skipMessage.setTitle("Skiped :-").setDescription(songQueue[0].title).setColor("WHITE");
 
-    songQueue.shift();
+    const currSong = songQueue.shift();
+    isLooping && songQueue.push(currSong);
     if(songQueue.length!==0){
 
         handlePlay(audioState,msg);

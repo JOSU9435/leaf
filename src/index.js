@@ -10,6 +10,8 @@ import handleSkip from "./commandHandlers/skip.js";
 import handlePause from "./commandHandlers/pause.js";
 import handleResume from "./commandHandlers/resume.js";
 import handleHelp from "./commandHandlers/help.js";
+import handleLoop from "./commandHandlers/loop.js";
+import handleUnLoop from "./commandHandlers/unloop.js";
 
 
 dotenv.config({path: "./src/.env"});
@@ -63,7 +65,8 @@ client.on("messageCreate", async (msg) => {
                 handlePlay(audioState,msg);
 
                 const handlePlayerIdle = () => {
-                    songQueue.shift();
+                    const currSong = songQueue.shift();
+                    audioState?.isLooping && songQueue.push(currSong);
                     if(songQueue.length!==0){
                         handlePlay(audioState,msg);
                     }else{
@@ -93,6 +96,12 @@ client.on("messageCreate", async (msg) => {
         }
         else if(command===`${prefix}resume` || command===`${prefix}unpause`){
             handleResume(audioState,msg);
+        }
+        else if(command===`${prefix}loop`){
+            handleLoop(audioState,msg);
+        }
+        else if(command===`${prefix}unloop`){
+            handleUnLoop(audioState,msg);
         }
         else if(command===`${prefix}disconnect` || command===`${prefix}dc`){
 

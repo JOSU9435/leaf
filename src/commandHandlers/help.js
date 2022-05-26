@@ -32,6 +32,14 @@ const handleHelp = (msg) => {
             command: "-resume, -unpause",
             description: "resumes the current playing song",
         },
+        {
+            command: "-loop",
+            description: "loops the queue",
+        },
+        {
+            command: "-uploop",
+            description: "unloops the queue",
+        },
     ]
 
     const helpMessage = new MessageEmbed();
