@@ -43,7 +43,10 @@ const handleJoin = (msg) => {
         return audioState;
 
     } catch (error) {
-        disconnect(audioState,msg);
+        const unableJoinMessage = new MessageEmbed();
+        
+        unableJoinMessage.setTitle("Unable to join").setColor("WHITE");
+        msg?.channel?.send({embeds: [unableJoinMessage]});
     }
 
 }
