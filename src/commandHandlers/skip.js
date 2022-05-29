@@ -2,6 +2,7 @@ import { Message, MessageEmbed } from "discord.js";
 import AudioState from "../models/AudioState.js";
 import Song from "../models/Song.js";
 import handlePlay from "../utils/play.js";
+import disconnect from "./disconnect.js";
 
 /**
  * @param {AudioState} audioState
@@ -23,6 +24,14 @@ const handleSkip = (audioState,msg) => {
         handlePlay(audioState,msg);
     }else{
         player?.stop();
+
+        audioState.idleTimeoutId = setTimeout(() => {
+            disconnect(audioState,msg);
+            const idleTimeoutMessage = new MessageEmbed();
+            idleTimeoutMessage.setTitle("due to inactivity").setColor("WHITE");
+            msg?.channel?.send({embeds: [idleTimeoutMessage]});
+        }, 1000*60*5);
+
         const queueEndMessage = new MessageEmbed();
 
         queueEndMessage.setTitle("End of queue").setColor("WHITE");

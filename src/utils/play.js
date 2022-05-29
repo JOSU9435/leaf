@@ -16,6 +16,11 @@ const handlePlay = async (audioState, msg) => {
     try {
         const {player, songQueue} = audioState;
 
+        if(audioState?.idleTimeoutId){
+            clearTimeout(audioState?.idleTimeoutId);
+            audioState.idleTimeoutId=null;
+        }
+
         if(songQueue.length===0) return;
 
         

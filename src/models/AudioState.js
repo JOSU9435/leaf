@@ -9,6 +9,8 @@ import Song from "./Song.js";
  *      connection,
  *      player,
  *      songQueue[],
+ *      isLooping,
+ *      idleTimeoutId,
  * }
  */
 
@@ -20,12 +22,14 @@ import Song from "./Song.js";
      * @param {AudioPlayer} player
      * @param {Array<Song>} songQueue
      * @param {boolean} isLooping
+     * @param {NodeJS.Timeout} idleTimeoutId
      */
-    constructor (connection,player,songQueue,isLooping = false){
+    constructor (connection,player,songQueue,isLooping = false,idleTimeoutId = null){
         this.connection = connection;
         this.player = player;
         this.songQueue = songQueue;
         this.isLooping = isLooping;
+        this.idleTimeoutId = idleTimeoutId;
     }  
 }
 
