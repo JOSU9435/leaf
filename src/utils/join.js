@@ -11,34 +11,41 @@ import disconnect from "../commandHandlers/disconnect.js";
 
 const handleJoin = (msg) => {
 
-    const memberVoiceChannel = msg?.member?.voice?.channel;
-    if(!memberVoiceChannel){
-        const enterVcMessage = new MessageEmbed();
-        enterVcMessage.setTitle("You need to be in a VC first").setColor("WHITE");
+    try {
+        
+        const memberVoiceChannel = msg?.member?.voice?.channel;
+        if(!memberVoiceChannel){
+            const enterVcMessage = new MessageEmbed();
+            enterVcMessage.setTitle("You need to be in a VC first").setColor("WHITE");
+    
+            msg.reply({embeds: [enterVcMessage]});
+            return {};
+        }
+    
+        const songQueue = [];
+    
+        const connection = joinVoiceChannel({
+            channelId: memberVoiceChannel.id,
+            guildId: memberVoiceChannel.guild.id,
+            adapterCreator: memberVoiceChannel.guild.voiceAdapterCreator,
+        })
+    
+        const player = createAudioPlayer();
+    
+        connection.subscribe(player);
+    
+        connection.on(VoiceConnectionStatus.Disconnected,() => {
+            disconnect(audioState,msg);
+        })
+    
+        const audioState = new AudioState(connection,player,songQueue);
+    
+        return audioState;
 
-        msg.reply({embeds: [enterVcMessage]});
-        return {};
+    } catch (error) {
+        disconnect(audioState,msg);
     }
 
-    const songQueue = [];
-
-    const connection = joinVoiceChannel({
-        channelId: memberVoiceChannel.id,
-        guildId: memberVoiceChannel.guild.id,
-        adapterCreator: memberVoiceChannel.guild.voiceAdapterCreator,
-    })
-
-    const player = createAudioPlayer();
-
-    connection.subscribe(player);
-
-    connection.on(VoiceConnectionStatus.Disconnected,() => {
-        disconnect(audioState,msg);
-    })
-
-    const audioState = new AudioState(connection,player,songQueue);
-
-    return audioState;
 }
 
 export default handleJoin;
