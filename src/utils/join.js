@@ -31,6 +31,11 @@ const handleJoin = (msg) => {
         })
     
         const player = createAudioPlayer();
+
+        player.on("error", (error) => {
+            disconnect(audioState,msg);
+            console.log(error.message);
+        })
     
         connection.subscribe(player);
     
