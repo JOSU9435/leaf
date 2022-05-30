@@ -49,7 +49,7 @@ const handlePlayMusic = async (audioState,msg,args) => {
                         idleTimeoutMessage.setTitle("due to inactivity").setColor("WHITE");
                         msg?.channel?.send({embeds: [idleTimeoutMessage]});
                     }, 1000*60*5);
-                    audioState.player.off(AudioPlayerStatus.Idle,handlePlayerIdle);
+                    audioState?.player?.off(AudioPlayerStatus.Idle,handlePlayerIdle);
                 }
             }
     
