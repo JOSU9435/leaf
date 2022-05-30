@@ -32,19 +32,18 @@ const handleJoin = (msg) => {
     
         const player = createAudioPlayer();
 
+        connection.subscribe(player);
+        const audioState = new AudioState(connection,player,songQueue);
+        
+        connection.on(VoiceConnectionStatus.Disconnected,() => {
+            disconnect(audioState,msg);
+        })
+        
         player.on("error", (error) => {
             disconnect(audioState,msg);
             console.log(error.message);
         })
-    
-        connection.subscribe(player);
-    
-        connection.on(VoiceConnectionStatus.Disconnected,() => {
-            disconnect(audioState,msg);
-        })
-    
-        const audioState = new AudioState(connection,player,songQueue);
-    
+        
         return audioState;
 
     } catch (error) {
