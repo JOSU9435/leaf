@@ -40,8 +40,7 @@ const handleJoin = (msg) => {
         })
         
         player.on("error", (error) => {
-            disconnect(audioState,msg);
-            console.log(error.message);
+            console.log("play.js err",error.resource.ended);
         })
         
         return audioState;
