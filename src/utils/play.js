@@ -31,7 +31,7 @@ const handlePlay = async (audioState, msg) => {
         if(!ytdl.validateURL(url)){
             return;
         }
-        const stream = ytdl(url,{filter: "audioonly",});
+        const stream = ytdl(url,{filter: "audioonly", quality: "lowestaudio"});
         
         const audioResource = createAudioResource(stream,{ inlineVolume: 1});
         

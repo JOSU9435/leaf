@@ -43,12 +43,14 @@ const handlePlayMusic = async (audioState,msg,args) => {
                 if(songQueue.length!==0){
                     handlePlay(audioState,msg);
                 }else{
-                    audioState.idleTimeoutId = setTimeout(() => {
-                        disconnect(audioState,msg);
-                        const idleTimeoutMessage = new MessageEmbed();
-                        idleTimeoutMessage.setTitle("due to inactivity").setColor("WHITE");
-                        msg?.channel?.send({embeds: [idleTimeoutMessage]});
-                    }, 1000*60*5);
+                    if(!audioState?.idleTimeoutId){
+                        audioState.idleTimeoutId = setTimeout(() => {
+                            disconnect(audioState,msg);
+                            const idleTimeoutMessage = new MessageEmbed();
+                            idleTimeoutMessage.setTitle("due to inactivity").setColor("WHITE");
+                            msg?.channel?.send({embeds: [idleTimeoutMessage]});
+                        }, 1000*60*5);
+                    }
                     audioState?.player?.off(AudioPlayerStatus.Idle,handlePlayerIdle);
                 }
             }
