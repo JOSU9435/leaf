@@ -13,6 +13,11 @@ const disconnect = (audioState, msg) => {
 
     const {connection, player, songQueue} = audioState;
 
+    if(audioState?.idleTimeoutId){
+        clearTimeout(audioState?.idleTimeoutId);
+        audioState.idleTimeoutId=null;
+    }
+
     player?.stop();
     connection?.destroy();
     delete audioState?.connection;
