@@ -6,7 +6,7 @@ import handleSearch from "../utils/search.js";
 import disconnect from "./disconnect.js";
 
 /**
- * 
+ * @description pushes the reqested song to the songQueue sets the event listers for to handle idle state of the player 
  * @param {AudioState} audioState 
  * @param {Message} msg 
  * @param {string} args 
@@ -44,6 +44,8 @@ const handlePlayMusic = async (audioState,msg,args) => {
                     handlePlay(audioState,msg);
                 }else{
                     if(!audioState?.idleTimeoutId){
+
+                        // setting the timeout to disconnect the bot due to inactivity.
                         audioState.idleTimeoutId = setTimeout(() => {
                             disconnect(audioState,msg);
                             const idleTimeoutMessage = new MessageEmbed();

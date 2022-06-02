@@ -1,9 +1,7 @@
 import dotenv from "dotenv";
-import { Client, Intents, MessageEmbed } from "discord.js";
+import { Client } from "discord.js";
 import handleJoin from "./utils/join.js";
-import handlePlay from "./utils/play.js";
-import { AudioPlayerStatus, VoiceConnectionStatus } from "@discordjs/voice";
-import handleSearch from "./utils/search.js";
+import { VoiceConnectionStatus } from "@discordjs/voice";
 import disconnect from "./commandHandlers/disconnect.js";
 import handleQueue from "./commandHandlers/queue.js";
 import handleSkip from "./commandHandlers/skip.js";
