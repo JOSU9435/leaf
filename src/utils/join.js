@@ -1,10 +1,10 @@
-import Discord, { Message, MessageEmbed } from "discord.js";
-import { AudioPlayer, createAudioPlayer, joinVoiceChannel, VoiceConnection, VoiceConnectionStatus } from "@discordjs/voice";
+import { Message, MessageEmbed } from "discord.js";
+import { createAudioPlayer, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
 import AudioState from "../models/AudioState.js";
 import disconnect from "../commandHandlers/disconnect.js";
 
 /**
- * 
+ * @description initialize the connection to the voice channel, the audio player and the songQueue returns a audioState with the player instance and the connection instance and the songQueue.
  * @param {Message} msg 
  * @returns {AudioState}
  */

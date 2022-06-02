@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import AudioState from "../models/AudioState.js";
 
 /**
- * 
+ * @description pauses the audio player
  * @param {AudioState} audioState 
  * @param {Message} msg 
  */

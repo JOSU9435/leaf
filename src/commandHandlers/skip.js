@@ -1,10 +1,9 @@
 import { Message, MessageEmbed } from "discord.js";
 import AudioState from "../models/AudioState.js";
-import Song from "../models/Song.js";
 import handlePlay from "../utils/play.js";
-import disconnect from "./disconnect.js";
 
 /**
+ * @description skips the current song and plays the next song from the songQueue if it is not empty
  * @param {AudioState} audioState
  * @param {Message} msg 
  */

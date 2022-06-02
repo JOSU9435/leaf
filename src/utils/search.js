@@ -1,11 +1,9 @@
-import { MessageEmbed } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
 import Song from "../models/Song.js";
-import disconnect from "../commandHandlers/disconnect.js";
 
 /**
- * 
+ * @description search the args string in youTube and returns the song object of the first video in the search results. 
  * @param {string} args 
  * @returns {Song | null} 
  */

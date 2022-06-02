@@ -1,11 +1,8 @@
-import { AudioPlayer, VoiceConnection } from "@discordjs/voice"
 import { Message, MessageEmbed } from "discord.js"
 import AudioState from "../models/AudioState.js";
-import Song from "../models/Song.js"
 /**
- * 
+ * @description destroys the connection from the voice channel, stops the audio player and clears the songQueue
  * @param {AudioState} audioState 
- * @param {Array<Song>} songQueue
  * @param {Message} msg 
  */
 

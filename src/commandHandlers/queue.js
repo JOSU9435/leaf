@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from "discord.js";
 import Song from "../models/Song.js";
 
 /**
- * 
+ * @description prints the current songQueue in the text channel
  * @param {Message} msg 
  * @param {Array<Song>} songQueue 
  */

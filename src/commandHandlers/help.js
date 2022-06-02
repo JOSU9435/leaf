@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from "discord.js";
 
 
 /**
- * 
+ * @description prints all the available commands
  * @param {Message} msg 
  */
 const handleHelp = (msg) => {

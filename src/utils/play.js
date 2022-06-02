@@ -1,12 +1,12 @@
-import Discord, { Message, MessageEmbed } from "discord.js";
-import { AudioPlayerStatus, createAudioPlayer, createAudioResource } from "@discordjs/voice";
+import { Message, MessageEmbed } from "discord.js";
+import { createAudioResource } from "@discordjs/voice";
 import ytdl from "ytdl-core";
-import yts from "yt-search";
 import disconnect from "../commandHandlers/disconnect.js";
 import AudioState from "../models/AudioState.js";
-import Song from "../models/Song.js";
 
 /**
+ * 
+ * @description plays the first song from the songQueue
  * @param {AudioState} audioState 
  * @param {Message} msg
  */
@@ -35,7 +35,7 @@ const handlePlay = async (audioState, msg) => {
         
         const audioResource = createAudioResource(stream,{ inlineVolume: 1});
         
-        const messageContent = new Discord.MessageEmbed();
+        const messageContent = new MessageEmbed();
         messageContent.setTitle(`Playing :-\n${title}`);
         messageContent.setFields({
             name: "duration",
