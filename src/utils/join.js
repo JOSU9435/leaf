@@ -40,6 +40,12 @@ const handleJoin = (msg) => {
         })
         
         player.on("error", (error) => {
+            const errMessage = new MessageEmbed();
+            errMessage.setTitle("Something went Wrong").setColor("WHITE");
+
+            msg?.channel?.send({embeds: [errMessage]});
+
+            disconnect(audioState,msg);
             console.log("play.js err",error.resource.ended);
         })
         
@@ -48,7 +54,7 @@ const handleJoin = (msg) => {
     } catch (error) {
         const unableJoinMessage = new MessageEmbed();
         
-        unableJoinMessage.setTitle("Unable to join").setColor("WHITE");
+        unableJoinMessage.setTitle("Unable to join the VC").setColor("WHITE");
         msg?.channel?.send({embeds: [unableJoinMessage]});
     }
 
