@@ -49,31 +49,27 @@ client.on("messageCreate", async (msg) => {
         else if(audioState?.connection?.state?.status !== VoiceConnectionStatus.Ready){
             return; // checks if the bot is ready to receive commands
         }
-        else if(!authorityCheck(audioState,msg)){
-            return; // checks if the user is in the same channel as the bot
-        }
-        else if(command===`${prefix}queue` || command===`${prefix}q`){
+        else if((command===`${prefix}queue` || command===`${prefix}q`) && authorityCheck(audioState,msg)){
 
             handleQueue(msg,audioState?.songQueue);
         }
-        else if(command===`${prefix}skip` || command===`${prefix}next` || command===`${prefix}n`){
+        else if((command===`${prefix}skip` || command===`${prefix}next` || command===`${prefix}n`) && authorityCheck(audioState,msg)){
             
             handleSkip(audioState,msg);
         }
-        else if(command===`${prefix}pause`){
+        else if((command===`${prefix}pause`) && authorityCheck(audioState,msg)){
             handlePause(audioState,msg);
         }
-        else if(command===`${prefix}resume` || command===`${prefix}unpause`){
+        else if((command===`${prefix}resume` || command===`${prefix}unpause`) && authorityCheck(audioState,msg)){
             handleResume(audioState,msg);
         }
-        else if(command===`${prefix}loop`){
+        else if((command===`${prefix}loop`) && authorityCheck(audioState,msg)){
             handleLoop(audioState,msg);
         }
-        else if(command===`${prefix}unloop`){
+        else if((command===`${prefix}unloop`) && authorityCheck(audioState,msg)){
             handleUnLoop(audioState,msg);
         }
-        else if(command===`${prefix}disconnect` || command===`${prefix}dc`){
-
+        else if((command===`${prefix}disconnect` || command===`${prefix}dc`) && authorityCheck(audioState,msg)){
             disconnect(audioState,msg);
         }
         
