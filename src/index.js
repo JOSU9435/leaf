@@ -11,6 +11,7 @@ import handleHelp from "./commandHandlers/help.js";
 import handleLoop from "./commandHandlers/loop.js";
 import handleUnLoop from "./commandHandlers/unloop.js";
 import handlePlayMusic from "./commandHandlers/playMusic.js";
+import authorityCheck from "./utils/authorityCheck.js";
 
 
 dotenv.config({path: "./src/.env"});
@@ -46,7 +47,10 @@ client.on("messageCreate", async (msg) => {
             handleHelp(msg);
         }
         else if(audioState?.connection?.state?.status !== VoiceConnectionStatus.Ready){
-            return;
+            return; // checks if the bot is ready to receive commands
+        }
+        else if(!authorityCheck(audioState,msg)){
+            return; // checks if the user is in the same channel as the bot
         }
         else if(command===`${prefix}queue` || command===`${prefix}q`){
 
