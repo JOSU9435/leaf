@@ -40,8 +40,10 @@ client.on("messageCreate", async (msg) => {
                 
                 if(!audioState?.connection) return;
             }
+
+            if(!authorityCheck(audioState,msg)) return;
     
-            handlePlayMusic(audioState,msg,args);
+            await handlePlayMusic(audioState,msg,args);
         }
         else if(command===`${prefix}help` || command===`${prefix}h`){
             handleHelp(msg);
