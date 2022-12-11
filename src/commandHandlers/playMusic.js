@@ -1,3 +1,4 @@
+import {Worker} from "node:worker_threads";
 import { AudioPlayerStatus } from "@discordjs/voice";
 import { Message, MessageEmbed } from "discord.js";
 import AudioState from "../models/AudioState.js";
@@ -14,25 +15,60 @@ import disconnect from "./disconnect.js";
 const handlePlayMusic = async (audioState,msg,args) => {
 
     try {
-        const song = await handleSearch(args);
-    
         const {songQueue} = audioState;
-    
-        if(!song){
-            const songNotfoundMessage = new MessageEmbed();
-            songNotfoundMessage.setTitle("Song not found").setColor("WHITE");
-    
-            msg?.channel?.send({embeds: [songNotfoundMessage]});
-    
-            return;
+        
+        if(audioState?.player?.state?.status===AudioPlayerStatus.Playing){
+            // uses a worker thread to search for songs when the main thread is playing a song
+            const worker = new Worker("./src/threads/queueSong.js",{
+                workerData: {args}
+            });
+            
+            const queueMessageContent = new MessageEmbed();
+            
+            worker.on("exit", (code) => {      
+                if(code!==0){
+                    return;
+                }
+                msg?.channel?.send({embeds: [queueMessageContent]});
+            })
+            
+            worker.on("message", (song) => {
+                songQueue.push(song);
+                queueMessageContent.setTitle(`Queued :-\n${song?.title}`).setColor("WHITE");
+            })
+
+            worker.on("error", (err) => {
+                if(err.code === 400){
+                    const songNotfoundMessage = new MessageEmbed();
+                    songNotfoundMessage.setTitle("Song not found").setColor("WHITE");
+
+                    msg?.channel?.send({embeds: [songNotfoundMessage]});
+                    return;
+                }
+                const errMessageContent = new MessageEmbed();
+                errMessageContent.setTitle("Something went wrong").setColor("WHITE");
+                msg?.channel?.send({embeds: [errMessageContent]});
+                disconnect(audioState,msg);
+            })
+        }else{
+            const song = await handleSearch(args);
+        
+            if(!song){
+                const songNotfoundMessage = new MessageEmbed();
+                songNotfoundMessage.setTitle("Song not found").setColor("WHITE");
+        
+                msg?.channel?.send({embeds: [songNotfoundMessage]});
+        
+                return;
+            }
+        
+            songQueue.push(song);
+        
+            const queueMessageContent = new MessageEmbed();
+            queueMessageContent.setTitle(`Queued :-\n${song.title}`).setColor("WHITE");
+        
+            msg?.channel?.send({embeds: [queueMessageContent]});
         }
-    
-        songQueue.push(song);
-    
-        const queueMessageContent = new MessageEmbed();
-        queueMessageContent.setTitle(`Queued :-\n${song.title}`).setColor("WHITE");
-    
-        msg?.channel?.send({embeds: [queueMessageContent]});
                     
         if(audioState?.player?.state?.status===AudioPlayerStatus.Idle && songQueue.length!==0){
             handlePlay(audioState,msg);
